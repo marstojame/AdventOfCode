@@ -2,6 +2,7 @@ import javax.annotation.processing.SupportedSourceVersion;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 
 public class day5 {
@@ -43,11 +44,20 @@ public class day5 {
         }
     }
 
+    public void processAction2(){
+        for (Action a: actions) {
+            crates = a.processAction2(crates);
+        }
+    }
+
     public String getTopCrates(){
         StringBuilder stringBuilder = new StringBuilder();
 
-        for (CrateStack c: crates) {
-            stringBuilder.append(c.getTopCrate());
+//        for (CrateStack c: crates) {
+//            stringBuilder.append(c.getTopCrate());
+//        }
+        for (CrateStack crate : crates) {
+            stringBuilder.append(crate.getTopCrate());
         }
 
         return stringBuilder.toString();
@@ -59,8 +69,8 @@ public class day5 {
         day5 d = new day5();
         d.loadData();
 
-        d.processAction();
-        System.out.println(d);
+        // d.processAction(); //Day1
+        d.processAction2();
 
         System.out.println("TopCrates: "+d.getTopCrates());
 
@@ -107,6 +117,19 @@ class Action {
         return crates;
     }
 
+    public ArrayList<CrateStack> processAction2(ArrayList<CrateStack> crates){
+        CrateStack sourceStack = crates.get(source);
+        CrateStack destinationStack = crates.get(destination);
+
+        ArrayList<Character> stack = sourceStack.removeCrate(countToMove);
+        destinationStack.addCrate(stack);
+
+        crates.set(source, sourceStack);
+        crates.set(destination, destinationStack);
+
+        return crates;
+    }
+
     @Override
     public String toString() {
         return "Action{" +
@@ -127,11 +150,29 @@ class CrateStack {
     public void addCrate(Character crate) {
         this.crates.add(crate);
     }
+
+    public void addCrate(ArrayList<Character> newCrates){
+
+        for (int i = newCrates.size()-1; i != -1; i--) {
+            crates.add(newCrates.get(i));
+        }
+    }
     
     public Character removeCrate(){
         Character crateLetter = crates.get(crates.size()-1);
         crates.remove(crates.size()-1);
         return crateLetter;
+    }
+
+    public ArrayList<Character> removeCrate(int moveCount){
+        ArrayList<Character> movedCrates = new ArrayList<>();
+
+        for (int i = 0; i < moveCount; i++) {
+            movedCrates.add(crates.get(crates.size()-1));
+            crates.remove(crates.size()-1);
+        }
+
+        return movedCrates;
     }
 
     public Character getTopCrate(){
