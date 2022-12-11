@@ -44,7 +44,7 @@ public class day6 {
         for (int i = 0; i < buffer.length; i++) {
             for (int j = 0; j < buffer.length; j++) {
                 if (i != j && buffer[i]==buffer[j]) {
-//                    System.out.println(buffer);
+//                    FileSystem.out.println(buffer);
                     duplicate = true;
                     break;
                 }
